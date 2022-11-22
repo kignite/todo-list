@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useRef } from 'react';
 import {
   CheckActiveIcon,
   CheckCircleIcon,
@@ -100,18 +101,45 @@ const StyledTaskItem = styled.div`
   }
 `;
 
-const TodoItem = () => {
+const TodoItem = ({
+  todo,
+  onToggleDone,
+  onSave,
+  onDelete,
+  onChangeMode }) => {
+
+  const inputRef = useRef(null);
+
+  const handleKeyDown = (event) => {
+    if (inputRef.current.value.length > 0 && event.key === 'Enter') {
+      onSave?.({ id: todo.id, title: inputRef.current.value });
+    }
+    if (event.key === 'Escape') {
+      onChangeMode?.({ id: todo.id, isEdit: false });
+    }
+  };
+
   return (
-    <StyledTaskItem>
+    <StyledTaskItem className={`${todo.isDone ? "done" : ""} ${todo.isEdit ? "edit" : ""}`}>
       <div className="task-item-checked">
-        <span className="icon icon-checked" />
+        <span className="icon icon-checked" onClick={() => {
+          onToggleDone?.(todo.id);
+        }} />
       </div>
-      <div className="task-item-body">
-        <span className="task-item-body-text">todo</span>
-        <input className="task-item-body-input" />
+      <div className="task-item-body" onDoubleClick={() => onChangeMode?.({ id: todo.id, isEdit: true })}>
+        <span className="task-item-body-text">{todo.title}</span>
+        <input
+          ref={inputRef}
+          className="task-item-body-input"
+          onKeyDown={handleKeyDown}
+          defaultValue={todo.title}
+        />
       </div>
       <div className="task-item-action ">
-        <button className="btn-reset btn-destroy icon"></button>
+        <button
+          className="btn-reset btn-destroy icon"
+          onClick={() => onDelete({ id: todo.id })}>
+        </button>
       </div>
     </StyledTaskItem>
   );

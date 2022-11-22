@@ -30,11 +30,14 @@ const StyledButton = styled.button`
     text-decoration: underline;
   }
 `;
+const countRemaining = ({todos}) => {
+  return todos.length
+}
 
-const Footer = () => {
+const Footer = ({todos}) => {
   return (
     <StyledFooter>
-      <p>剩餘項目數： 0</p>
+      <p>剩餘項目數： {countRemaining({todos})}</p>
       <StyledButton>登出</StyledButton>
     </StyledFooter>
   );
