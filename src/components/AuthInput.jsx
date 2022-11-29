@@ -22,7 +22,7 @@ const StyledInput = styled.input`
   border-radius: 0px;
 `;
 
-const AuthInput = () => {
+const AuthInput = ({ type, label, value, placeholder, onChange }) => {
   return (
     <StyledContainer>
       <StyledLabel>label</StyledLabel>
