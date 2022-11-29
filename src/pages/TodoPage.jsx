@@ -2,33 +2,13 @@ import { Footer, Header, TodoCollection, TodoInput } from 'components';
 import { useEffect } from 'react';
 import { getTodos, createTodo, patchTodo, deleteTodo } from 'api/todos';
 import { useState } from 'react';
-
-// const dummyTodos = [
-//   {
-//     title: 'Learn react-router',
-//     isDone: true,
-//     id: 1,
-//   },
-//   {
-//     title: 'Learn to create custom hooks',
-//     isDone: false,
-//     id: 2,
-//   },
-//   {
-//     title: 'Learn to use context',
-//     isDone: true,
-//     id: 3,
-//   },
-//   {
-//     title: 'Learn to implement auth',
-//     isDone: false,
-//     id: 4,
-//   },
-// ];
+import { useNavigate } from 'react-router-dom';
+import { checkPermission } from 'api/auth'; 
 
 const TodoPage = () => {
   const [inputValue, setInputValue] = useState('')
   const [todos, setTodos] = useState([])
+  const navigate = useNavigate()
 
   const handleChange = (value) => {
     setInputValue(value)
@@ -169,6 +149,20 @@ const TodoPage = () => {
     };
     getTodosAsync();
   }, []);
+
+  useEffect(() => {
+    const checkTokenIsValid = async () => {
+      const authToken = localStorage.getItem('authToken')
+      if (!authToken) {
+        navigate('/login')
+      }
+      const result = await checkPermission(authToken)
+      if (result) {
+        return
+      }
+    }
+    checkTokenIsValid()
+  }, [navigate])
 
   return (
     <div>
