@@ -26,15 +26,14 @@ const StyledButton = styled.button`
   padding: 6px 0;
   margin: 2rem 0;
 
-  &.hover {
-    cursor: pointer;
-  }
+ cursor: pointer;
 `;
 
 const StyledLinkText = styled.div`
   color: #0062ff;
   font-size: 16px;
   font-weight: 400;
+  cursor: pointer
 `;
 
 export {

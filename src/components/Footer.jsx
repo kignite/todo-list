@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledFooter = styled.footer`
@@ -30,15 +31,20 @@ const StyledButton = styled.button`
     text-decoration: underline;
   }
 `;
-const countRemaining = ({todos}) => {
+const countRemaining = ({ todos }) => {
   return todos.length
 }
 
-const Footer = ({todos}) => {
+const Footer = ({ todos }) => {
+  const navigate = useNavigate()
+  const handleClick = () => {
+    localStorage.removeItem('authToken')
+    navigate('/login')
+  }
   return (
     <StyledFooter>
-      <p>剩餘項目數： {countRemaining({todos})}</p>
-      <StyledButton>登出</StyledButton>
+      <p>剩餘項目數： {countRemaining({ todos })}</p>
+      <StyledButton onClick={handleClick}>登出</StyledButton>
     </StyledFooter>
   );
 };
