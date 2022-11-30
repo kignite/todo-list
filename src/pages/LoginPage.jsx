@@ -9,8 +9,10 @@ import { AuthInput } from 'components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { login,checkPermission } from 'api/auth';
 import Swal from 'sweetalert2';
+import { useAuth } from 'contexts/AuthContexts';
+
+const { login, isAuthenticated } = useAuth
 
 const LoginPage = () => {
   const [username, setUsername] = useState('')
@@ -25,12 +27,11 @@ const LoginPage = () => {
       return
     }
 
-    const { success, authToken } = await login({
+    const success = await login({
       username,
       password
     })
     if (success) {
-      localStorage.setItem('authToken', authToken)
       Swal.fire({
         position: 'top',
         title: '登入成功',
@@ -38,7 +39,6 @@ const LoginPage = () => {
         icon: 'success',
         showConfirmButton: false
       })
-      navigate('/todo')
       return
     }
     Swal.fire({
@@ -51,18 +51,10 @@ const LoginPage = () => {
   }
 
   useEffect(() => {
-    const checkTokenIsValid = async () => {
-      const authToken = localStorage.getItem('authToken')
-      if (!authToken) {
-        navigate('/login')
-      }
-      const result = await checkPermission(authToken)
-      if (result) {
-        navigate('/todo')
-      }
+    if (isAuthenticated) {
+      navigate('/todos')
     }
-    checkTokenIsValid()
-  }, [navigate])
+  }, [navigate, isAuthenticated])
 
   return (
     <AuthContainer>
